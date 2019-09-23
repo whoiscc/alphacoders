@@ -22,6 +22,7 @@ async def download_page(client, url):
         print(f'(retry = {count}) download url: {url}')
         try:
             async with client.get(url) as resp:
+                assert resp.status == 200
                 return await resp.text()
         except ClientError:
             pass
@@ -125,3 +126,8 @@ class SingleTask:
 
         for task in download_image_task_list:
             await task
+
+
+@start_immediately
+async def execute_single_task(manager, client):
+    return await manager.run(client)
